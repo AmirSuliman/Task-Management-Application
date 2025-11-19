@@ -15,7 +15,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        {children}
+        {/* Footer */}
+        <footer className="text-center text-sm text-gray-500 my-4">
+          <p>Built with Next.js, Express, and MongoDB</p>
+        </footer>
+      </body>
     </html>
   );
 }

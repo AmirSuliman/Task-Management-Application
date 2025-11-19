@@ -1,9 +1,16 @@
 import { FILTER_TABS } from "@/utils/constants";
+import { Dispatch, SetStateAction } from "react";
 
 export default function FilterTabs({
   activeFilter,
   onFilterChange,
   taskCounts,
+}: {
+  activeFilter: "all" | "pending" | "in-progress" | "completed";
+  onFilterChange: Dispatch<
+    SetStateAction<"all" | "pending" | "in-progress" | "completed">
+  >;
+  taskCounts: { [key: string]: number };
 }) {
   return (
     <div className="border-b border-gray-200">
@@ -15,7 +22,11 @@ export default function FilterTabs({
           return (
             <button
               key={tab.id}
-              onClick={() => onFilterChange(tab.id)}
+              onClick={() =>
+                onFilterChange(
+                  tab.id as "all" | "pending" | "in-progress" | "completed"
+                )
+              }
               className={`
                 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors
                 ${

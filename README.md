@@ -395,14 +395,6 @@ Current implementation includes:
 - ✅ CORS configuration
 - ✅ Error message sanitization
 
-For production, consider adding:
-
-- Authentication (JWT)
-- Rate limiting
-- Request sanitization
-- HTTPS enforcement
-- Helmet.js for security headers
-
 ## 🔄 Connecting Frontend
 
 Update your frontend API calls to point to:
@@ -460,7 +452,7 @@ Potential improvements:
 
 ## 👤 Author
 
-Your Name - Full Stack Developer Assignment
+Amir Suliman - Full Stack Developer Assignment
 
 ## 📄 License
 
@@ -468,4 +460,527 @@ ISC
 
 ---
 
-**Note**: This is a backend API for the Task Management Application assignment. The frontend should be run separately and configured to communicate with this API.
+# Task Management Frontend - Next.js
+
+A modern, responsive task management application built with Next.js 14, React, and Tailwind CSS.
+
+## 📋 Table of Contents
+
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Project Structure](#project-structure)
+- [Setup Instructions](#setup-instructions)
+- [Available Scripts](#available-scripts)
+- [Environment Variables](#environment-variables)
+- [Component Architecture](#component-architecture)
+- [API Integration](#api-integration)
+- [Styling](#styling)
+- [Browser Support](#browser-support)
+
+## ✨ Features
+
+### Core Features ✅
+
+- **Task Management**: Create, read, update, and delete tasks
+- **Status Tracking**: Three status levels (Pending, In Progress, Completed)
+- **Status Filtering**: Filter tasks by status with tab-based navigation
+- **Responsive Design**: Fully responsive layout for mobile, tablet, and desktop
+- **Form Validation**: Client-side validation with helpful error messages
+- **Loading States**: Visual feedback during API operations
+- **Error Handling**: Comprehensive error handling with user-friendly messages
+- **Optimistic Updates**: Instant UI updates for better user experience
+- **Delete Confirmation**: Modal confirmation before deleting tasks
+
+### UI/UX Features ✅
+
+- **Modern Design**: Clean, professional interface with Tailwind CSS
+- **Status Badges**: Color-coded status indicators
+- **Task Counts**: Real-time task counts per status
+- **Empty States**: Helpful messages when no tasks exist
+- **Smooth Animations**: Subtle transitions and loading indicators
+- **Accessible**: Semantic HTML and keyboard navigation support
+
+## 🛠 Tech Stack
+
+- **Framework**: Next.js 14 (App Router)
+- **UI Library**: React 18
+- **Styling**: Tailwind CSS
+- **HTTP Client**: Axios
+- **State Management**: React Hooks (useState, useEffect, useCallback)
+- **Form Handling**: Native HTML5 validation + custom validation
+
+## 📁 Project Structure
+
+```
+task-management-frontend/
+├── src/
+│   ├── app/
+│   │   ├── layout.js              # Root layout with metadata
+│   │   ├── page.js                # Main page component
+│   │   └── globals.css            # Global styles
+│   ├── components/
+│   │   ├── CreateTaskForm.jsx     # Task creation form
+│   │   ├── TaskList.jsx           # Task list container
+│   │   ├── TaskItem.jsx           # Individual task card
+│   │   ├── FilterTabs.jsx         # Status filter tabs
+│   │   ├── LoadingSpinner.jsx     # Loading indicator
+│   │   ├── ErrorMessage.jsx       # Error display
+│   │   └── DeleteConfirmModal.jsx # Delete confirmation modal
+│   ├── hooks/
+│   │   └── useTasks.js            # Custom hook for task management
+│   ├── services/
+│   │   └── taskService.js         # API service layer
+│   ├── utils/
+│   │   ├── constants.js           # App constants
+│   │   └── helpers.js             # Helper functions
+│   └── types/
+│       └── task.js                # Type definitions (if using TypeScript)
+├── public/                        # Static assets
+├── .env.local                     # Environment variables
+├── .env.example                   # Example environment variables
+├── .gitignore                     # Git ignore rules
+├── next.config.js                 # Next.js configuration
+├── package.json                   # Dependencies
+├── tailwind.config.js             # Tailwind configuration
+├── postcss.config.js              # PostCSS configuration
+└── README.md                      # Documentation
+```
+
+## 🚀 Setup Instructions
+
+### Prerequisites
+
+- Node.js (v18 or higher)
+- npm or yarn
+- Backend API running on http://localhost:5000
+
+### Installation
+
+1. **Create Next.js project**
+
+   ```bash
+   npx create-next-app@latest task-management-frontend
+   ```
+
+   **Select these options:**
+
+   - TypeScript? **No** (or Yes if you prefer)
+   - ESLint? **Yes**
+   - Tailwind CSS? **Yes**
+   - `src/` directory? **Yes**
+   - App Router? **Yes**
+   - Customize default import alias? **No**
+
+2. **Navigate to project**
+
+   ```bash
+   cd task-management-frontend
+   ```
+
+3. **Install additional dependencies**
+
+   ```bash
+   npm install axios
+   ```
+
+4. **Create environment file**
+
+   Create `.env.local` in the root directory:
+
+   ```env
+   NEXT_PUBLIC_API_URL=http://localhost:5000/api
+   ```
+
+5. **Copy all source files**
+
+   Copy all the component, hook, service, and utility files as provided in the artifacts.
+
+6. **Start the development server**
+   ```bash
+   npm run dev
+   ```
+
+The application will be available at `http://localhost:3000`
+
+## 📜 Available Scripts
+
+```bash
+# Start development server
+npm run dev
+
+# Build for production
+npm run build
+
+# Start production server
+npm start
+
+# Run ESLint
+npm run lint
+```
+
+## 🔐 Environment Variables
+
+Create a `.env.local` file in the root directory:
+
+```env
+# Backend API URL
+NEXT_PUBLIC_API_URL=http://localhost:5000/api
+```
+
+For production, update the URL to your production backend URL.
+
+**Note**: All environment variables that need to be exposed to the browser must be prefixed with `NEXT_PUBLIC_`.
+
+## 🏗 Component Architecture
+
+### Page Components
+
+- **`app/page.js`**: Main application page that orchestrates all components
+
+### Feature Components
+
+- **`CreateTaskForm`**: Handles task creation with validation
+- **`TaskList`**: Displays list of tasks with empty state
+- **`TaskItem`**: Individual task card with actions
+- **`FilterTabs`**: Status-based filtering interface
+- **`DeleteConfirmModal`**: Confirmation dialog for task deletion
+
+### UI Components
+
+- **`LoadingSpinner`**: Reusable loading indicator
+- **`ErrorMessage`**: Standardized error display
+
+### Custom Hooks
+
+- **`useTasks`**: Manages task state, API calls, and operations
+  - Handles loading, error states
+  - Provides CRUD operations
+  - Implements optimistic updates
+  - Manages filtering
+
+### Service Layer
+
+- **`taskService`**: Centralized API communication
+  - GET /tasks (with optional status filter)
+  - POST /tasks (create new task)
+  - PATCH /tasks/:id (update status)
+  - DELETE /tasks/:id (delete task)
+
+### Utilities
+
+- **`constants.js`**: Status configurations, filter tabs, validation rules
+- **`helpers.js`**: Date formatting, text truncation, validation functions
+
+## 🔌 API Integration
+
+### Base Configuration
+
+```javascript
+// services/taskService.js
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+```
+
+### API Endpoints
+
+All endpoints expect/return JSON with this structure:
+
+```javascript
+// Success Response
+{
+  "success": true,
+  "message": "Operation successful",
+  "data": { /* task object or array */ },
+  "statusCode": 200
+}
+
+// Error Response
+{
+  "success": false,
+  "message": "Error message",
+  "errors": ["Detailed error 1", "Detailed error 2"],
+  "statusCode": 400
+}
+```
+
+### Error Handling
+
+The service layer includes:
+
+- Axios interceptors for global error handling
+- Timeout configuration (10 seconds)
+- Detailed error messages for users
+- Network error detection
+
+## 🎨 Styling
+
+### Tailwind CSS
+
+The application uses Tailwind CSS for styling with a custom configuration:
+
+**Color Scheme:**
+
+- Primary: Blue (for actions, active states)
+- Success: Green (for completed tasks)
+- Warning: Yellow (for pending tasks)
+- Info: Blue (for in-progress tasks)
+- Danger: Red (for delete actions)
+
+**Responsive Breakpoints:**
+
+- `sm`: 640px (mobile)
+- `md`: 768px (tablet)
+- `lg`: 1024px (desktop)
+- `xl`: 1280px (large desktop)
+
+### Custom Styles
+
+Global styles in `globals.css`:
+
+- Custom scrollbar styling
+- Smooth transitions
+- Gradient backgrounds
+
+### Component Styling Patterns
+
+```javascript
+// Status-based conditional styling
+className={`
+  ${statusConfig.color}
+  hover:shadow-md
+  transition-shadow
+`}
+```
+
+## 🧪 Testing the Application
+
+### Manual Testing Checklist
+
+**Task Creation:**
+
+- [ ] Create task with title only
+- [ ] Create task with title and description
+- [ ] Try to create task without title (should show error)
+- [ ] Try to create task with title > 100 chars (should show error)
+- [ ] Verify success message appears
+
+**Task Status Updates:**
+
+- [ ] Update task from Pending → In Progress
+- [ ] Update task from In Progress → Completed
+- [ ] Verify status badge updates
+- [ ] Verify task moves to correct filter tab
+
+**Task Deletion:**
+
+- [ ] Click delete button
+- [ ] Verify confirmation modal appears
+- [ ] Cancel deletion
+- [ ] Confirm deletion
+- [ ] Verify task is removed
+
+**Filtering:**
+
+- [ ] Switch between filter tabs
+- [ ] Verify task counts update
+- [ ] Verify correct tasks display
+- [ ] Verify empty state shows when no tasks
+
+**Error Handling:**
+
+- [ ] Stop backend server
+- [ ] Try to create task (should show connection error)
+- [ ] Restart backend
+- [ ] Click "Try again" on error message
+
+**Responsive Design:**
+
+- [ ] Test on mobile (< 640px)
+- [ ] Test on tablet (640px - 1024px)
+- [ ] Test on desktop (> 1024px)
+- [ ] Verify all elements are accessible and readable
+
+## 🐛 Troubleshooting
+
+### Backend Connection Issues
+
+**Problem**: "No response from server" error
+
+**Solutions:**
+
+1. Ensure backend is running: `cd task-management-backend && npm run dev`
+2. Check backend is on port 5000
+3. Verify `NEXT_PUBLIC_API_URL` in `.env.local`
+4. Check browser console for CORS errors
+
+### CORS Errors
+
+**Problem**: CORS policy blocking requests
+
+**Solutions:**
+
+1. Ensure backend has CORS enabled (should be by default)
+2. Check backend `app.js` has `app.use(cors())`
+3. Restart both frontend and backend
+
+### Environment Variables Not Working
+
+**Problem**: API calls going to wrong URL
+
+**Solutions:**
+
+1. Ensure `.env.local` exists in root directory
+2. Restart Next.js dev server after creating/modifying `.env.local`
+3. Verify variable starts with `NEXT_PUBLIC_`
+4. Check `next.config.js` includes env configuration
+
+### Build Errors
+
+**Problem**: Build fails with module not found
+
+**Solutions:**
+
+1. Delete `node_modules` and `.next` folders
+2. Run `npm install` again
+3. Clear Next.js cache: `rm -rf .next`
+4. Restart dev server
+
+## 🚀 Deployment
+
+### Production Build
+
+```bash
+# Build the application
+npm run build
+
+# Start production server
+npm start
+```
+
+### Environment Variables for Production
+
+Update `.env.local` (or use your hosting platform's environment variable settings):
+
+```env
+NEXT_PUBLIC_API_URL=https://your-production-api.com/api
+```
+
+### Deployment Platforms
+
+**Vercel (Recommended for Next.js):**
+
+1. Push code to GitHub
+2. Import project in Vercel
+3. Add environment variables
+4. Deploy
+
+**Other Platforms:**
+
+- Netlify
+- AWS Amplify
+- DigitalOcean App Platform
+- Railway
+
+## 📊 Performance Optimizations
+
+Implemented optimizations:
+
+- ✅ Optimistic UI updates for instant feedback
+- ✅ Debounced API calls where appropriate
+- ✅ Minimal re-renders with proper React hooks
+- ✅ Code splitting with Next.js App Router
+- ✅ Image optimization (if images added)
+- ✅ CSS purging with Tailwind
+
+## 🔒 Security Considerations
+
+Current implementation:
+
+- ✅ Environment variables for API URLs
+- ✅ Input validation on client and server
+- ✅ XSS prevention with React's built-in escaping
+- ✅ HTTPS ready (for production)
+
+## 🎯 Future Enhancements
+
+Potential improvements:
+
+- [ ] Add task editing functionality
+- [ ] Implement search/filter by title
+- [ ] Add sorting options (by date, title, status)
+- [ ] Implement task priorities (low, medium, high)
+- [ ] Add due dates with calendar picker
+- [ ] Implement pagination for large task lists
+- [ ] Add dark mode toggle
+- [ ] Implement drag-and-drop reordering
+- [ ] Add task categories/tags
+- [ ] Implement user authentication
+- [ ] Add task collaboration features
+- [ ] Implement real-time updates with WebSockets
+- [ ] Add unit and integration tests
+
+## 🌐 Browser Support
+
+Tested and working on:
+
+- Chrome (latest)
+- Firefox (latest)
+- Safari (latest)
+- Edge (latest)
+
+Mobile browsers:
+
+- iOS Safari
+- Chrome Mobile
+- Samsung Internet
+
+## 📝 Code Style
+
+The project follows these conventions:
+
+- **Components**: PascalCase (e.g., `TaskItem.jsx`)
+- **Hooks**: camelCase with 'use' prefix (e.g., `useTasks.js`)
+- **Services**: camelCase (e.g., `taskService.js`)
+- **Constants**: UPPER_SNAKE_CASE (e.g., `TASK_STATUS`)
+- **Functions**: camelCase (e.g., `handleSubmit`)
+
+## 👥 Contributing
+
+When contributing:
+
+1. Follow existing code style
+2. Write descriptive commit messages
+3. Test all features before committing
+4. Update documentation for new features
+
+## 📄 License
+
+ISC
+
+## 🤝 Integration with Backend
+
+This frontend is designed to work with the Task Management Backend API. Ensure both are running:
+
+```bash
+# Terminal 1 - Backend
+cd task-management-backend
+npm run dev
+# Runs on http://localhost:5000
+
+# Terminal 2 - Frontend
+cd task-management-frontend
+npm run dev
+# Runs on http://localhost:3000
+```
+
+## 📧 Support
+
+If you encounter any issues:
+
+1. Check this README for solutions
+2. Review browser console for errors
+3. Verify backend is running and accessible
+4. Check environment variables are set correctly
+
+---
+
+**Built with ❤️ using Next.js, React, and Tailwind CSS**

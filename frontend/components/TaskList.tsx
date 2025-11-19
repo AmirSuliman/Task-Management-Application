@@ -1,6 +1,15 @@
+import { Task, TaskStatus } from "@/types/common";
 import TaskItem from "./TaskItem";
 
-export default function TaskList({ tasks, onUpdateStatus, onDelete }) {
+export default function TaskList({
+  tasks,
+  onUpdateStatus,
+  onDelete,
+}: {
+  tasks: Task[];
+  onUpdateStatus: (taskId: string, newStatus: TaskStatus) => Promise<void>;
+  onDelete: (taskId: string) => Promise<{ success: boolean; error?: string }>;
+}) {
   if (tasks.length === 0) {
     return (
       <div className="text-center py-12">

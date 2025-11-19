@@ -2,8 +2,17 @@ import { useState } from "react";
 import { STATUS_CONFIG } from "@/utils/constants";
 import { formatDate } from "@/utils/helpers";
 import DeleteConfirmModal from "./DeleteConfirmModal";
+import { Task, TaskStatus } from "@/types/common";
 
-export default function TaskItem({ task, onUpdateStatus, onDelete }) {
+export default function TaskItem({
+  task,
+  onUpdateStatus,
+  onDelete,
+}: {
+  task: Task;
+  onUpdateStatus: (taskId: string, newStatus: TaskStatus) => Promise<void>;
+  onDelete: (taskId: string) => Promise<{ success: boolean; error?: string }>;
+}) {
   const [isUpdating, setIsUpdating] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -14,7 +23,7 @@ export default function TaskItem({ task, onUpdateStatus, onDelete }) {
     if (!statusConfig.nextStatus || isUpdating) return;
 
     setIsUpdating(true);
-    await onUpdateStatus(task.id, statusConfig.nextStatus);
+    await onUpdateStatus(task.id, statusConfig.nextStatus as TaskStatus);
     setIsUpdating(false);
   };
 

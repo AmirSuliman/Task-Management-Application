@@ -2,7 +2,7 @@ import apiClient from "../utils/apiClient";
 
 const taskService = {
   // Get all tasks with optional status filter
-  async getTasks(status = null) {
+  async getTasks(status: string | null = null) {
     try {
       const url = status ? `/tasks?status=${status}` : "/tasks";
       const response = await apiClient.get(url);

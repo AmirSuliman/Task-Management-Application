@@ -1,32 +1,23 @@
-import taskService from "@/services/taskService";
-import { VALIDATION } from "@/utils/constants";
+import React, { useState } from "react";
 import { validateTitle } from "@/utils/helpers";
-import { useState } from "react";
+import { VALIDATION } from "@/utils/constants";
 
-export default function CreateTaskForm() {
+export default function CreateTaskForm({
+  onCreateTask,
+  isCreating,
+}: {
+  onCreateTask: (taskData: {
+    title: string;
+    description?: string;
+  }) => Promise<{ success: boolean; error?: string }>;
+  isCreating: boolean;
+}) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState<{ title?: string; submit?: string }>({});
   const [showSuccess, setShowSuccess] = useState(false);
 
-  const [tasks, setTasks] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-
-  // Create task
-  const createTask = async (taskData) => {
-    try {
-      setError(null);
-      const newTask = await taskService.createTask(taskData);
-      setTasks((prev) => [newTask, ...prev]);
-      return { success: true, data: newTask };
-    } catch (err) {
-      setError(err.message);
-      return { success: false, error: err.message };
-    }
-  };
-
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     // Validate
@@ -39,7 +30,7 @@ export default function CreateTaskForm() {
     setErrors({});
 
     // Create task
-    const result = await createTask({ title, description });
+    const result = await onCreateTask({ title, description });
 
     if (result.success) {
       // Reset form
@@ -57,13 +48,13 @@ export default function CreateTaskForm() {
   const remainingChars = VALIDATION.TITLE_MAX_LENGTH - title.length;
 
   return (
-    <main className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
       <h2 className="text-lg font-semibold text-gray-900 mb-4">
         Create New Task
       </h2>
 
       {showSuccess && (
-        <article className="mb-4 bg-green-50 border border-green-200 rounded-lg p-3">
+        <div className="mb-4 bg-green-50 border border-green-200 rounded-lg p-3">
           <p className="text-sm text-green-800 flex items-center">
             <svg
               className="w-4 h-4 mr-2"
@@ -78,7 +69,7 @@ export default function CreateTaskForm() {
             </svg>
             Task created successfully!
           </p>
-        </article>
+        </div>
       )}
 
       {errors.submit && (
@@ -106,7 +97,7 @@ export default function CreateTaskForm() {
               w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent
               ${errors.title ? "border-red-300 bg-red-50" : "border-gray-300"}
             `}
-            disabled={loading}
+            disabled={isCreating}
           />
           <div className="flex justify-between mt-1">
             {errors.title ? (
@@ -138,17 +129,17 @@ export default function CreateTaskForm() {
             placeholder="Enter task description (optional)"
             rows={3}
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
-            disabled={loading}
+            disabled={isCreating}
           />
           <p className="text-sm text-gray-500 mt-1">Optional field</p>
         </div>
 
         <button
           type="submit"
-          disabled={loading || !title.trim()}
+          disabled={isCreating || !title.trim()}
           className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
-          {loading ? (
+          {isCreating ? (
             <span className="flex items-center justify-center">
               <svg
                 className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
@@ -176,6 +167,6 @@ export default function CreateTaskForm() {
           )}
         </button>
       </form>
-    </main>
+    </div>
   );
 }

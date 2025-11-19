@@ -4,6 +4,12 @@ export default function DeleteConfirmModal({
   onConfirm,
   taskTitle,
   isDeleting,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  onConfirm: () => void;
+  taskTitle: string;
+  isDeleting: boolean;
 }) {
   if (!isOpen) return null;
 
@@ -41,7 +47,9 @@ export default function DeleteConfirmModal({
             <div className="mt-2">
               <p className="text-sm text-gray-500">
                 Are you sure you want to delete{" "}
-                <span className="font-medium text-gray-700">"{taskTitle}"</span>
+                <span className="font-medium text-gray-700">
+                  &#34;{taskTitle}&#34;
+                </span>
                 ? This action cannot be undone.
               </p>
             </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import CreateTaskForm from "@/components/CreateTaskForm";
+import FilterTabs from "@/components/FilterTabs";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import TaskList from "@/components/TaskList";
 import taskService from "@/services/taskService";
@@ -10,21 +11,24 @@ export default function Home() {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [filter, setFilter] = useState("all");
 
   // Fetch tasks
   const fetchTasks = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
-      const data = await taskService.getTasks();
+      const statusFilter = filter === "all" ? null : filter;
+      const data = await taskService.getTasks(statusFilter);
       setTasks(data);
     } catch (err) {
       setError(err.message);
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [filter]);
 
+  // Load tasks on mount and when filter changes
   useEffect(() => {
     fetchTasks();
   }, [fetchTasks]);
@@ -73,6 +77,17 @@ export default function Home() {
     }
   };
 
+  // Get task counts by status
+  const getTaskCounts = () => {
+    return {
+      all: tasks.length,
+      pending: tasks.filter((t) => t.status === "pending").length,
+      "in-progress": tasks.filter((t) => t.status === "in-progress").length,
+      completed: tasks.filter((t) => t.status === "completed").length,
+    };
+  };
+  const taskCounts = getTaskCounts();
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -92,6 +107,12 @@ export default function Home() {
         <main>
           {/* Create Task Form */}
           <CreateTaskForm />
+
+          <FilterTabs
+            activeFilter={filter}
+            onFilterChange={setFilter}
+            taskCounts={taskCounts}
+          />
 
           {/* Task List */}
           <div className="p-4">

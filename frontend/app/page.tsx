@@ -1,9 +1,34 @@
 "use client";
 
 import CreateTaskForm from "@/components/CreateTaskForm";
-import { useState } from "react";
+import LoadingSpinner from "@/components/LoadingSpinner";
+import TaskList from "@/components/TaskList";
+import taskService from "@/services/taskService";
+import { useCallback, useEffect, useState } from "react";
 
 export default function Home() {
+  const [tasks, setTasks] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Fetch tasks
+  const fetchTasks = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const data = await taskService.getTasks();
+      setTasks(data);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchTasks();
+  }, [fetchTasks]);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -23,6 +48,15 @@ export default function Home() {
         <main>
           {/* Create Task Form */}
           <CreateTaskForm />
+
+          {/* Task List */}
+          <div className="p-4">
+            {loading ? (
+              <LoadingSpinner text="Loading tasks..." />
+            ) : (
+              <TaskList tasks={tasks} />
+            )}
+          </div>
         </main>
 
         {/* Footer */}

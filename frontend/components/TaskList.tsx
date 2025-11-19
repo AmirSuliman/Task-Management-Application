@@ -1,6 +1,6 @@
 import TaskItem from "./TaskItem";
 
-export default function TaskList({ tasks }) {
+export default function TaskList({ tasks, onUpdateStatus, onDelete }) {
   if (tasks.length === 0) {
     return (
       <div className="text-center py-12">
@@ -30,7 +30,12 @@ export default function TaskList({ tasks }) {
   return (
     <div className="space-y-4">
       {tasks.map((task) => (
-        <TaskItem key={task.id} task={task} />
+        <TaskItem
+          key={task.id}
+          task={task}
+          onUpdateStatus={onUpdateStatus}
+          onDelete={onDelete}
+        />
       ))}
     </div>
   );

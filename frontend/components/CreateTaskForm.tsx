@@ -5,20 +5,18 @@ import toast from "react-hot-toast";
 
 export default function CreateTaskForm({
   onCreateTask,
-  isCreating,
   showHeader = true,
 }: {
   onCreateTask: (taskData: {
     title: string;
     description?: string;
   }) => Promise<{ success: boolean; error?: string }>;
-  isCreating: boolean;
   showHeader?: boolean;
 }) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [errors, setErrors] = useState<{ title?: string; submit?: string }>({});
-
+  const [loading, setLoading] = useState(false);
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -32,7 +30,9 @@ export default function CreateTaskForm({
     setErrors({});
 
     // Create task
+    setLoading(true);
     const result = await onCreateTask({ title, description });
+    setLoading(false);
 
     if (result.success) {
       // Reset form
@@ -86,7 +86,7 @@ export default function CreateTaskForm({
                   : "border-gray-300 dark:border-slate-700"
               }
             `}
-            disabled={isCreating}
+            disabled={loading}
           />
           <div className="flex justify-between mt-1">
             {errors.title ? (
@@ -124,7 +124,7 @@ export default function CreateTaskForm({
             placeholder="Enter task description (optional)"
             rows={3}
             className="w-full px-4 py-2 border border-gray-300 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none bg-white dark:bg-slate-950 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500"
-            disabled={isCreating}
+            disabled={loading}
           />
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
             Optional field
@@ -133,10 +133,10 @@ export default function CreateTaskForm({
 
         <button
           type="submit"
-          disabled={isCreating || !title.trim()}
+          disabled={loading || !title.trim()}
           className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-slate-900 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
-          {isCreating ? (
+          {loading ? (
             <span className="flex items-center justify-center">
               <svg
                 className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"

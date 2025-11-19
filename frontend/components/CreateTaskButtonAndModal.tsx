@@ -1,8 +1,7 @@
-import { useTasks } from "@/hooks/useTasks";
 import { useState } from "react";
 import CreateTaskForm from "./CreateTaskForm";
 
-const CreateTaskButtonAndModal = ({ createTask, loading }: { createTask: (taskData: { title: string; description?: string }) => Promise<{ success: boolean; error?: string }>; loading: boolean }) => {
+const CreateTaskButtonAndModal = ({ createTask }: { createTask: (taskData: { title: string; description?: string }) => Promise<{ success: boolean; error?: string }>; }) => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
  
@@ -62,7 +61,6 @@ const CreateTaskButtonAndModal = ({ createTask, loading }: { createTask: (taskDa
                   }
                   return result;
                 }}
-                isCreating={loading}
                 showHeader={false}
               />
             </div>

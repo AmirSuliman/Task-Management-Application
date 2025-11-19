@@ -19,6 +19,7 @@ apiClient.interceptors.response.use(
       // Server responded with error
       throw new Error(error.response.data.message || "An error occurred");
     } else if (error.request) {
+      console.error(error);
       // Request made but no response
       throw new Error(
         "No response from server. Please check if the backend is running."

@@ -38,7 +38,7 @@ export default function Home() {
             </p>
           </div>
         </header>
-        <CreateTaskButtonAndModal createTask={createTask} loading={loading} />
+        <CreateTaskButtonAndModal createTask={createTask} />
         {/* Main Content */}
         <main>
           {/* Filter Tabs */}
